@@ -33,11 +33,13 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     CalendarView calMenu;
-    TextView sel;
+    TextView sel,tag,selname;
+
 
 
     @Override
@@ -45,18 +47,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sel = findViewById(R.id.sel);
+        tag = findViewById(R.id.tag);
+        selname = findViewById(R.id.selname);
 
 
         calMenu = findViewById(R.id.calMenu);
+
         calMenu.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+
                 //클래스 생성
                 CustomDialog customDialog = new CustomDialog(MainActivity.this);
                 //다이얼로그 호출
-                customDialog.callFunction();
+                customDialog.callFunction(selname,sel,tag);
           }
         });
-
     }
 }
