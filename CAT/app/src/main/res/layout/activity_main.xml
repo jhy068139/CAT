@@ -20,6 +20,7 @@
             android:layout_height="60dp">
         </ImageView>
         <ImageView
+            android:id="@+id/itemMenu"
             android:layout_marginRight="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
