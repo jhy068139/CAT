@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -22,11 +23,11 @@ public class MainActivity extends AppCompatActivity {
     CalendarView calMenu;
     TextView sel,tag,selname;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         sel = findViewById(R.id.sel);
         tag = findViewById(R.id.tag);
