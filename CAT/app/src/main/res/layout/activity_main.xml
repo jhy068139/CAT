@@ -138,7 +138,26 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <SlidingDrawer
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:content="@id/listView"
+        android:handle="@id/handle"
+        android:topOffset="0dp">
 
+        <ImageView
+            android:src="@drawable/handle"
+            android:id="@+id/handle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"></ImageView>
+        <ListView
+            android:id="@+id/listView"
+            android:background="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+
+    </SlidingDrawer>
 
 
 

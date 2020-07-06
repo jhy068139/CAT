@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+    <string-array name="location">
+        <item>---- 선택 ----</item>
+        <item>외부약속</item>
+        <item>내부약속</item>
+
+    </string-array>
+
+
+
+
+</resources>
