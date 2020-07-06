@@ -21,11 +21,11 @@ import java.net.UnknownHostException;
 import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.View;
-<<<<<<< HEAD
+
 import android.widget.ArrayAdapter;
-=======
+
 import android.widget.Button;
->>>>>>> 010afc44dad1d7700bf6e3ecd347629a709fba8a
+
 import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,26 +39,23 @@ import static java.net.HttpURLConnection.HTTP_OK;
 public class MainActivity extends AppCompatActivity {
 
     CalendarView calMenu;
-<<<<<<< HEAD
+
     TextView sel,tag,selname;
-=======
-    TextView sel;
     Button testbtn;
->>>>>>> 010afc44dad1d7700bf6e3ecd347629a709fba8a
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
+
 
         sel = findViewById(R.id.sel);
         tag = findViewById(R.id.tag);
         selname = findViewById(R.id.selname);
-        itemMenu = findViewById(R.id.itemMenu);
-=======
->>>>>>> 010afc44dad1d7700bf6e3ecd347629a709fba8a
+        ImageView itemMenu = findViewById(R.id.itemMenu);
+
 
 
         calMenu = (CalendarView)findViewById(R.id.calMenu);
