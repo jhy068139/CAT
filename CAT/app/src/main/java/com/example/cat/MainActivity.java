@@ -1,110 +1,186 @@
 package com.example.cat;
 
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Bundle;
 
-import java.util.Calendar;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.UnknownHostException;
+
+import android.os.StrictMode;
+import android.view.Gravity;
+import android.view.View;
+<<<<<<< HEAD
+import android.widget.ArrayAdapter;
+=======
+import android.widget.Button;
+>>>>>>> 010afc44dad1d7700bf6e3ecd347629a709fba8a
+import android.widget.CalendarView;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import static java.net.HttpURLConnection.HTTP_OK;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView itemMenu;
     CalendarView calMenu;
+<<<<<<< HEAD
     TextView sel,tag,selname;
+=======
+    TextView sel;
+    Button testbtn;
+>>>>>>> 010afc44dad1d7700bf6e3ecd347629a709fba8a
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
 
         sel = findViewById(R.id.sel);
         tag = findViewById(R.id.tag);
         selname = findViewById(R.id.selname);
         itemMenu = findViewById(R.id.itemMenu);
+=======
+>>>>>>> 010afc44dad1d7700bf6e3ecd347629a709fba8a
 
-        itemMenu.setOnClickListener(new View.OnClickListener() {
+
+        calMenu = (CalendarView)findViewById(R.id.calMenu);
+        sel = (TextView)findViewById(R.id.sel);
+        testbtn = findViewById(R.id.testBtn);
+
+        calMenu.setOnDateChangeListener(new CalendarView.OnDateChangeListener() // 날짜 선택 이벤트
+        {
             @Override
-            public void onClick(View v) {
-                PopupMenu p = new PopupMenu(
-                        getApplicationContext(), // 현재 화면의 제어권자
-                        v); // anchor : 팝업을 띄울 기준될 위젯
-                getMenuInflater().inflate(R.menu.item, p.getMenu());
-                // 이벤트 처리
-                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(getApplicationContext(),
-                                "팝업메뉴 이벤트 처리 - "
-                                        + item.getTitle(),
-                                Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                });
-
-
-                p.show(); // 메뉴를 띄우기
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth)
+            {
+                String date = year + "/" + (month + 1) + "/" + dayOfMonth;
+                sel.setText(date); // 선택한 날짜로 설정
 
             }
         });
 
-
-        calMenu = findViewById(R.id.calMenu);
-
-        calMenu.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        testbtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+            public void onClick(View v) {
+                try {
+                    StringBuffer buffer=new StringBuffer();
 
-                //클래스 생성
-                CustomDialog customDialog = new CustomDialog(MainActivity.this);
-                //다이얼로그 호출
-                customDialog.callFunction(selname,sel,tag);
-          }
+                    StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/LivingWthrIdxService/getUVIdx"); /*URL*/
+                    // urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=서비스키"); /*Service Key*/
+                    urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + URLEncoder.encode("0lN0C9DeARAXcU4qCfXFEPZoapkuQGQF957J6OF9lcfwk0MjstHyiMtbFSjWjUOrz8fIManY1NMA%2BbZWTA8PGQ%3D%3D", "UTF-8")); /*공공데이터포털에서 받은 인증키*/
+                    urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
+                    urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*한 페이지 결과 수*/
+                    urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("XML", "UTF-8")); /*요청자료형식(XML/JSON)*/
+                    urlBuilder.append("&" + URLEncoder.encode("areaNo", "UTF-8") + "=" + URLEncoder.encode("2920051500", "UTF-8")); /*광주광역시 송정1동*/
+                    urlBuilder.append("&" + URLEncoder.encode("time", "UTF-8") + "=" + URLEncoder.encode("2020070606", "UTF-8")); /*2020년 7월 6일 6시 발표*/
+
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+
+                    URL url = new URL(urlBuilder.toString());
+                    URLConnection t_connection = url.openConnection();
+                    t_connection.setReadTimeout(8000);
+                    InputStream is= t_connection.getInputStream(); //url위치로 입력스트림 연결 // 여기부터 문제 (링크 오류 아님, 불러오는 값의 형태가 잘못됐을 가능성이 높음)
+
+                    XmlPullParserFactory factory= XmlPullParserFactory.newInstance();//xml파싱을 위한
+                    XmlPullParser xpp= factory.newPullParser();
+                    xpp.setInput( new InputStreamReader(is, "UTF-8") ); //inputstream 으로부터 xml 입력받기
+
+                    String tag;
+
+                    xpp.next();
+                    int eventType= xpp.getEventType();
+                    while( eventType != XmlPullParser.END_DOCUMENT ){
+                        switch( eventType ){
+                            case XmlPullParser.START_DOCUMENT:
+                                break;
+
+                            case XmlPullParser.START_TAG:
+                                tag= xpp.getName();//태그 이름 얻어오기
+
+                                if(tag.equals("item")) ;// 첫번째 검색결과
+                                else if(tag.equals("today")){
+                                    buffer.append("오늘자외선 : ");
+                                    xpp.next();
+                                    buffer.append(xpp.getText());//today 요소의 TEXT 읽어와서 문자열버퍼에 추가
+                                    buffer.append("\n"); //줄바꿈 문자 추가
+                                }
+                                else if(tag.equals("tomorrow")){
+                                    buffer.append("내일자외선 : ");
+                                    xpp.next();
+                                    buffer.append(xpp.getText());
+                                    buffer.append("\n");
+                                }
+                                else if(tag.equals("theDayAfterTomorrow")){
+                                    buffer.append("모레자외선 :");
+                                    xpp.next();
+                                    buffer.append(xpp.getText());
+                                    buffer.append("\n");
+                                }
+                                break;
+
+                            case XmlPullParser.TEXT:
+                                break;
+
+                            case XmlPullParser.END_TAG:
+                                tag= xpp.getName(); //태그 이름 얻어오기
+
+                                if(tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료..줄바꿈
+
+                                break;
+                        }
+
+                        eventType= xpp.next();
+                    }
+
+                    testbtn.setText(buffer.toString());
+
+//                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                    conn.setConnectTimeout(15000);
+//                    conn.setReadTimeout(10000);
+//                    conn.setRequestMethod("POST");
+//                    conn.setDoOutput(true); // 쓰기모드 지정
+//                    conn.setDoInput(true); // 읽기모드 지정
+//                    conn.setUseCaches(false); // 캐싱데이터를 받을지 안받을지
+//                    conn.setDefaultUseCaches(false); // 캐싱데이터 디폴트 값 설정
+//                    conn.setRequestProperty("Accept-Charset", "utf-8");
+//                    conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+//                    BufferedReader rd;
+//                    if (conn.getResponseCode() == HTTP_OK) { // 원인
+//                        rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+//                    } else {
+//                        rd = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "UTF-8"));
+//                    }
+//                    StringBuilder sb = new StringBuilder();
+//                    String line;
+//                    while ((line = rd.readLine()) != null) {
+//                        sb.append(line);
+//                    }
+//                    rd.close();
+//                    conn.disconnect();
+//                    // System.out.println(sb.toString());
+//                    testbtn.setText(sb.toString());
+                } catch (IOException | XmlPullParserException | OutOfMemoryError e ) {
+                    testbtn.setText(e.toString());
+                }
+            }
         });
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater = getMenuInflater();
-
-        inflater.inflate(R.menu.item, menu);
-
-        return true;
-    }
-
-    public void dd(View v) {
-        Toast.makeText(getApplicationContext(), "dd", Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected (MenuItem item)
-    {
-        Toast toast = Toast.makeText(getApplicationContext(),"", Toast.LENGTH_LONG);
-
-        switch(item.getItemId())
-        {
-            case R.id.menu1:
-                toast.setText("Select Menu1");
-                break;
-            case R.id.menu2:
-                toast.setText("Select Menu2");
-                break;
-        }
-
-        toast.show();
-
-        return super.onOptionsItemSelected(item);
     }
 }
