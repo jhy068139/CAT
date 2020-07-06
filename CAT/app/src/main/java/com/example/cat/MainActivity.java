@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
                     xpp.next();
                     int eventType= xpp.getEventType();
+
                     while( eventType != XmlPullParser.END_DOCUMENT ){
                         switch( eventType ){
                             case XmlPullParser.START_DOCUMENT:
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                                 else if(tag.equals("today")){
                                     buffer.append("오늘자외선 : ");
                                     xpp.next();
-                                    buffer.append(xpp.getText());//today 요소의 TEXT 읽어와서 문자열버퍼에 추가
+                                    buffer.append(xpp.getText());//addr 요소의 TEXT 읽어와서 문자열버퍼에 추가
                                     buffer.append("\n"); //줄바꿈 문자 추가
                                 }
                                 else if(tag.equals("tomorrow")){
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                                 else if(tag.equals("theDayAfterTomorrow")){
                                     buffer.append("모레자외선 :");
                                     xpp.next();
-                                    buffer.append(xpp.getText());
+                                    buffer.append(xpp.getText());//cpId
                                     buffer.append("\n");
                                 }
                                 break;

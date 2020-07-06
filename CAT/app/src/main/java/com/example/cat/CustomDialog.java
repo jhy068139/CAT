@@ -46,7 +46,7 @@ public class CustomDialog {
         // 커스텀 다이얼로그의 각 위젯들을 정의한다.
         final Spinner sp = dlg.findViewById(R.id.sp);
         final TimePicker tp = dlg.findViewById(R.id.tp);
-        final EditText message = dlg.findViewById(R.id.mesgase);
+        final EditText message = dlg.findViewById(R.id.message);
         final Button okButton = dlg.findViewById(R.id.okButton);
         final Button cancelButton = dlg.findViewById(R.id.cancelButton);
 
