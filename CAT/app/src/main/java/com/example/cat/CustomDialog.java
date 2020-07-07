@@ -85,8 +85,8 @@ public class CustomDialog extends Context {
         final Button okButton = dlg.findViewById(R.id.okButton);
         final Button cancelButton = dlg.findViewById(R.id.cancelButton);
 
-        ArrayAdapter yearAdapter = ArrayAdapter.createFromResource(this, R.array.location, android.R.layout.simple_spinner_item);
-        sp.setAdapter(yearAdapter);
+/*        ArrayAdapter yearAdapter = ArrayAdapter.createFromResource(this, R.array.location, android.R.layout.simple_spinner_item);
+        sp.setAdapter(yearAdapter);*/
 
 
         tp.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {

@@ -20,15 +20,18 @@ import java.net.UnknownHostException;
 
 import android.os.StrictMode;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-<<<<<<< HEAD
 import android.widget.ArrayAdapter;
-=======
 import android.widget.Button;
->>>>>>> 010afc44dad1d7700bf6e3ecd347629a709fba8a
+
 import android.widget.CalendarView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -39,30 +42,51 @@ import static java.net.HttpURLConnection.HTTP_OK;
 public class MainActivity extends AppCompatActivity {
 
     CalendarView calMenu;
-<<<<<<< HEAD
+
     TextView sel,tag,selname;
-=======
-    TextView sel;
+
     Button testbtn;
->>>>>>> 010afc44dad1d7700bf6e3ecd347629a709fba8a
+    ImageView itemMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
 
-        sel = findViewById(R.id.sel);
-        tag = findViewById(R.id.tag);
-        selname = findViewById(R.id.selname);
+
         itemMenu = findViewById(R.id.itemMenu);
-=======
->>>>>>> 010afc44dad1d7700bf6e3ecd347629a709fba8a
+
+        itemMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu p = new PopupMenu(
+                        getApplicationContext(), // 현재 화면의 제어권자
+                        v); // anchor : 팝업을 띄울 기준될 위젯
+                getMenuInflater().inflate(R.menu.item, p.getMenu());
+                // 이벤트 처리
+                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(getApplicationContext(),
+                                "팝업메뉴 이벤트 처리 - "
+                                        + item.getTitle(),
+                                Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+
+
+                p.show(); // 메뉴를 띄우기
+
+            }
+        });
 
 
         calMenu = (CalendarView)findViewById(R.id.calMenu);
-        sel = (TextView)findViewById(R.id.sel);
+        sel = findViewById(R.id.sel);
+        tag = findViewById(R.id.tag);
+        selname = findViewById(R.id.selname);
         testbtn = findViewById(R.id.testBtn);
 
         calMenu.setOnDateChangeListener(new CalendarView.OnDateChangeListener() // 날짜 선택 이벤트
@@ -72,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
             {
                 String date = year + "/" + (month + 1) + "/" + dayOfMonth;
                 sel.setText(date); // 선택한 날짜로 설정
-
+                CustomDialog customDialog = new CustomDialog(MainActivity.this);
+                //다이얼로그 호출
+                customDialog.callFunction(selname,sel,tag);
             }
         });
 
@@ -152,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
                     testbtn.setText(buffer.toString());
 
+
 //                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 //                    conn.setConnectTimeout(15000);
 //                    conn.setReadTimeout(10000);
@@ -183,4 +210,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+
+        inflater.inflate(R.menu.item, menu);
+
+        return true;
+    }
+
+    public void dd(View v) {
+        Toast.makeText(getApplicationContext(), "dd", Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item)
+    {
+        Toast toast = Toast.makeText(getApplicationContext(),"", Toast.LENGTH_LONG);
+
+        switch(item.getItemId())
+        {
+            case R.id.menu1:
+                toast.setText("Select Menu1");
+                break;
+            case R.id.menu2:
+                toast.setText("Select Menu2");
+                break;
+        }
+
+        toast.show();
+
+        return super.onOptionsItemSelected(item);
+    }
 }
+
