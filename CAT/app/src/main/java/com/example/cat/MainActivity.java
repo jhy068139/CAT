@@ -1,9 +1,12 @@
 package com.example.cat;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Bundle;
@@ -28,9 +31,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -96,9 +102,47 @@ public class MainActivity extends AppCompatActivity {
             {
                 String date = year + "/" + (month + 1) + "/" + dayOfMonth;
                 sel.setText(date); // 선택한 날짜로 설정
-                CustomDialog customDialog = new CustomDialog(MainActivity.this);
+                AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.custom_dialog,null);
+
+
+
+                // 스피너 설정
+                final Spinner sp = (Spinner)mView.findViewById(R.id.sp);
+                final TimePicker tp = mView.findViewById(R.id.tp);
+                // 스피너 어댑터 설정
+                ArrayAdapter yearAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.location, android.R.layout.simple_spinner_item);
+                sp.setAdapter(yearAdapter);
+
+                // editText 설정
+                final EditText mesgase = mView. findViewById(R.id.mesgase);
+                // 확인 버튼 설정
+                aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Text 값 받아서 로그 남기기
+                            String selItem= (String)sp.getSelectedItem();
+                            String value = mesgase.getText().toString();
+                            selname.setText(value);
+                            tag.setText(selItem);
+                            dialog.dismiss();
+
+  //닫기
+                    }
+                });
+
+
+// 취소 버튼 설정
+                aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();     //닫기
+                    }
+                });
                 //다이얼로그 호출
-                customDialog.callFunction(selname,sel,tag);
+                aBuilder.setView(mView);
+                AlertDialog dialog = aBuilder.create();
+                dialog.show();
             }
         });
 
@@ -210,6 +254,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
