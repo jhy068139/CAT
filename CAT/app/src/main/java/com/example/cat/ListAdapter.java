@@ -58,9 +58,11 @@ public class ListAdapter extends BaseAdapter
 
         TextView oTextTitle = (TextView) convertView.findViewById(R.id.textTitle);
         TextView oTextDate = (TextView) convertView.findViewById(R.id.textDate);
+        TextView oTextTag = (TextView) convertView.findViewById(R.id.tag_box);
 
-        oTextTitle.setText(m_oData.get(position).getTag());
-        oTextDate.setText(m_oData.get(position).getTimestamp());
+        oTextTitle.setText(m_oData.get(position).getNote());
+        oTextDate.setText(m_oData.get(position).getSettingtime());
+        oTextTag.setText(m_oData.get(position).getTag());
         return convertView;
     }
 }
