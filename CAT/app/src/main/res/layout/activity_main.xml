@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -10,14 +11,13 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-      <!--  <Button
+        <Button
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:id="@+id/testBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </Button>
--->
         <ImageView
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -136,29 +136,29 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <SlidingDrawer
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:content="@id/listView"
         android:handle="@id/handle"
-        android:topOffset="0dp">
+        android:topOffset="0dp"
+        tools:layout_editor_absoluteX="-51dp"
+        tools:layout_editor_absoluteY="-16dp">
 
         <ImageView
-            android:src="@drawable/handle"
             android:id="@+id/handle"
             android:layout_width="50dp"
-            android:layout_height="50dp"></ImageView>
+            android:layout_height="50dp"
+            android:src="@drawable/handle"></ImageView>
+
         <ListView
             android:id="@+id/listView"
-            android:background="#FFFFFF"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ListView>
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"></ListView>
 
     </SlidingDrawer>
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
