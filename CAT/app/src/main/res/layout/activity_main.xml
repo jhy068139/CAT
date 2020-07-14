@@ -72,10 +72,32 @@
 
             <TextView
                 android:textColor="#FFFFFF"
-                android:id="@+id/timer"
+                android:id="@+id/today"
                 android:textSize="45dp"
-                android:text="오늘 내일 모레"
+                android:text="오늘"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/tomorrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
+                android:textColor="#FFFFFF"
+                android:id="@+id/tomorrow"
+                android:textSize="45dp"
+                android:text="내일"
+                app:layout_constraintLeft_toRightOf="@id/today"
+                app:layout_constraintRight_toLeftOf="@+id/morea"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
+                android:textColor="#FFFFFF"
+                android:id="@+id/morea"
+                android:textSize="45dp"
+                android:text="모레"
+                app:layout_constraintLeft_toRightOf="@id/tomorrow"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="wrap_content"
