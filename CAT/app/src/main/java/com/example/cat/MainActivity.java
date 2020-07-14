@@ -1,41 +1,13 @@
 package com.example.cat;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Bundle;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
-import android.os.StrictMode;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsSpinner;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,14 +18,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.cat.database.DatabaseHelper;
 import com.example.cat.database.model.Note;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import static java.net.HttpURLConnection.HTTP_OK;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,10 +33,8 @@ public class MainActivity extends AppCompatActivity {
     CalendarView calMenu;
 
     TextView sel,tag,selname;
-    final static String FILE_NAME = "test.txt";
 
 
-    Button testbtn;
     ImageView itemMenu;
     ListView listView;
 
@@ -127,10 +97,19 @@ public class MainActivity extends AppCompatActivity {
 
         notesList.addAll(db.getAllNotes());
 
-        createNote("hi","bye");
+/*        createNote("hi","bye");*/
 
         listView.setAdapter(listAdapter);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                deleteNote(position);
+                Toast.makeText(getApplication(), "ast",Toast.LENGTH_SHORT).show();
 
+                return false;
+
+            }
+        });
 
         itemMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
                 p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getTitle().toString().equals("설정") ){
+                            Intent intent = new Intent(getApplicationContext(),MenuActivity.class);
+                            startActivity(intent);
+
+                        }
                         Toast.makeText(getApplicationContext(),
                                 "팝업메뉴 이벤트 처리 - "
                                         + item.getTitle(),
@@ -159,9 +143,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         calMenu = (CalendarView) findViewById(R.id.calMenu);
-        sel = findViewById(R.id.sel);
-        tag = findViewById(R.id.tag);
-        selname = findViewById(R.id.selname);
+
+        sel= findViewById(R.id.sel);
 
 
         calMenu.setOnDateChangeListener(new CalendarView.OnDateChangeListener() // 날짜 선택 이벤트
@@ -190,9 +173,8 @@ public class MainActivity extends AppCompatActivity {
                         // Text 값 받아서 로그 남기기
                         String selItem = (String) sp.getSelectedItem();
                         String value = mesgase.getText().toString();
-                        selname.setText(value);
-                        tag.setText(selItem);
 
+                        createNote(selItem,value);
                         dialog.dismiss();
 
                         //닫기
@@ -214,14 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
-        Button testBtn = findViewById(R.id.testBtn);
-        testBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-
-            }
-        });
 //
 //        testbtn.setOnClickListener(new View.OnClickListener() {
 //                        @Override
