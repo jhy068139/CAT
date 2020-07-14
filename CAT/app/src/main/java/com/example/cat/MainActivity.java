@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -119,8 +120,37 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getTitle().toString().equals("설정") ){
-                            Intent intent = new Intent(getApplicationContext(),MenuActivity.class);
-                            startActivity(intent);
+                            AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
+                            View mView = getLayoutInflater().inflate(R.layout.setting_dialog, null);
+                            // 스피너 설정
+                            final Switch selSw = mView.findViewById(R.id.selSw);
+
+                            // editText 설정
+
+                            aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Text 값 받아서 로그 남기기
+
+
+                                    //닫기
+                                    dialog.dismiss();
+                                }
+                            });
+
+
+
+// 취소 버튼 설정
+                            aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();     //닫기
+                                }
+                            });
+                            //다이얼로그 호출
+                            aBuilder.setView(mView);
+                            AlertDialog dialog = aBuilder.create();
+                            dialog.show();
                         }
                         Toast.makeText(getApplicationContext(),
                                 "팝업메뉴 이벤트 처리 - "
