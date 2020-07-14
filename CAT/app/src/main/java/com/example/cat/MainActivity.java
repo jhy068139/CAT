@@ -43,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
     ListAdapter listAdapter;
 
-    private void createNote(String tag,String note,String SettingTime) {
+    private void createNote(String tag, String note, String SettingTime) {
         // inserting note in db and getting
         // newly inserted note id
-        long id = db.insertNote(tag, note,SettingTime);
+        long id = db.insertNote(tag, note, SettingTime);
 
         // get the newly inserted note from db
         Note n = db.getNote(id);
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
     /**
      * Toggling list and empty notes view
      */
@@ -94,14 +95,14 @@ public class MainActivity extends AppCompatActivity {
 
         notesList.addAll(db.getAllNotes());
 
-/*        createNote("hi","bye");*/
+        /*        createNote("hi","bye");*/
 
         listView.setAdapter(listAdapter);
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 deleteNote(position);
-                Toast.makeText(getApplication(), "ast",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(), "ast", Toast.LENGTH_SHORT).show();
 
                 return false;
 
@@ -109,118 +110,101 @@ public class MainActivity extends AppCompatActivity {
         });
 
         itemMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu p = new PopupMenu(
-                        getApplicationContext(), // 현재 화면의 제어권자
-                        v); // anchor : 팝업을 띄울 기준될 위젯
-                getMenuInflater().inflate(R.menu.item, p.getMenu());
-                // 이벤트 처리
-                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().toString().equals("설정") ){
-                            AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
-                            View mView = getLayoutInflater().inflate(R.layout.setting_dialog, null);
-                            // 스피너 설정
-                            final Switch selSw = mView.findViewById(R.id.selSw);
+                                        @Override
+                                        public void onClick(View v) {
 
-                            // editText 설정
+                                            // 이벤트 처리
 
-                            aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Text 값 받아서 로그 남기기
+                                            AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
+                                            View mView = getLayoutInflater().inflate(R.layout.setting_dialog, null);
+                                            // 스피너 설정
+                                            final Switch selSw = mView.findViewById(R.id.selSw);
+
+                                            // editText 설정
+
+                                            aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // Text 값 받아서 로그 남기기
 
 
-                                    //닫기
-                                    dialog.dismiss();
-                                }
-                            });
-
+                                                    //닫기
+                                                    dialog.dismiss();
+                                                }
+                                            });
 
 
 // 취소 버튼 설정
-                            aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();     //닫기
-                                }
-                            });
-                            //다이얼로그 호출
-                            aBuilder.setView(mView);
-                            AlertDialog dialog = aBuilder.create();
-                            dialog.show();
-                        }
-                        Toast.makeText(getApplicationContext(),
-                                "팝업메뉴 이벤트 처리 - "
-                                        + item.getTitle(),
-                                Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                });
+                                            aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();     //닫기
+                                                }
+                                            });
+                                            //다이얼로그 호출
+                                            aBuilder.setView(mView);
+                                            AlertDialog dialog = aBuilder.create();
+                                            dialog.show();
+                                        }
+                                    });
 
 
-                p.show(); // 메뉴를 띄우기
 
-            }
-        });
-
-
-        calMenu = (CalendarView) findViewById(R.id.calMenu);
+    calMenu =(CalendarView)findViewById(R.id.calMenu);
 
 
 
 
         calMenu.setOnDateChangeListener(new CalendarView.OnDateChangeListener() // 날짜 선택 이벤트
-        {
+
+    {
+        @Override
+        public void onSelectedDayChange (@NonNull CalendarView view,int year, int month,
+        int dayOfMonth){
+        final String date = year + "/" + (month + 1) + "/" + dayOfMonth;
+
+        AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
+
+
+        // 스피너 설정
+        final Spinner sp = (Spinner) mView.findViewById(R.id.sp);
+        final TimePicker tp = mView.findViewById(R.id.tp);
+        // 스피너 어댑터 설정
+        ArrayAdapter yearAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.location, android.R.layout.simple_spinner_item);
+        sp.setAdapter(yearAdapter);
+
+        // editText 설정
+        final EditText mesgase = mView.findViewById(R.id.mesgase);
+        // 확인 버튼 설정
+        aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                final String date = year + "/" + (month + 1) + "/" + dayOfMonth;
+            public void onClick(DialogInterface dialog, int which) {
+                // Text 값 받아서 로그 남기기
+                String selItem = (String) sp.getSelectedItem();
+                String value = mesgase.getText().toString();
 
-                AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
+                createNote(selItem, value, date);
+                dialog.dismiss();
 
-
-                // 스피너 설정
-                final Spinner sp = (Spinner) mView.findViewById(R.id.sp);
-                final TimePicker tp = mView.findViewById(R.id.tp);
-                // 스피너 어댑터 설정
-                ArrayAdapter yearAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.location, android.R.layout.simple_spinner_item);
-                sp.setAdapter(yearAdapter);
-
-                // editText 설정
-                final EditText mesgase = mView.findViewById(R.id.mesgase);
-                // 확인 버튼 설정
-                aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Text 값 받아서 로그 남기기
-                        String selItem = (String) sp.getSelectedItem();
-                        String value = mesgase.getText().toString();
-
-                        createNote(selItem,value,date);
-                        dialog.dismiss();
-
-                        //닫기
-                    }
-                });
-
+                //닫기
+            }
+        });
 
 
 // 취소 버튼 설정
-                aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();     //닫기
-                    }
-                });
-                //다이얼로그 호출
-                aBuilder.setView(mView);
-                AlertDialog dialog = aBuilder.create();
-                dialog.show();
+        aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();     //닫기
             }
         });
+        //다이얼로그 호출
+        aBuilder.setView(mView);
+        AlertDialog dialog = aBuilder.create();
+        dialog.show();
+    }
+    });
 
 //
 //        testbtn.setOnClickListener(new View.OnClickListener() {
@@ -367,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //        return super.onOptionsItemSelected(item);
 //    }
-    }
+}
 
 }
 
