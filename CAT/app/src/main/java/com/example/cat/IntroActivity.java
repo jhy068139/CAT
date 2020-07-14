@@ -1,23 +1,24 @@
 package com.example.cat;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class StartActivity extends AppCompatActivity {
-
-    @Override
+public class IntroActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+
         try {
-            Thread.sleep(4000);
+            Thread.sleep(4000); // 4초 인트로 화면 보여주기
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        startActivity(new Intent(this, MainActivity.class));
+
+        // next Activity 기재.
+
+        startActivity(new Intent(this,MainActivity.class));
         finish();
     }
 }

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CAT</string>
+    <string name="todo">TODO</string>
 
 </resources>
