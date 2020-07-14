@@ -1,8 +1,12 @@
 package com.example.cat;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,10 +27,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cat.database.BroadcastD;
 import com.example.cat.database.DatabaseHelper;
 import com.example.cat.database.model.Note;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
 
     ArrayList<Note> notesList = new ArrayList<>();
+
+    StringBuffer buffer = new StringBuffer();
+
+    public StringBuffer getBuffer() {
+        return this.buffer;
+    }
 
 
     private DatabaseHelper db;
@@ -206,152 +229,113 @@ public class MainActivity extends AppCompatActivity {
     }
     });
 
-//
-//        testbtn.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            try {
-//                                StringBuffer buffer=new StringBuffer();
-//
-//                                StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/LivingWthrIdxService/getUVIdx"); /*URL*/
-//                                // urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=서비스키"); /*Service Key*/
-//                                urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + URLEncoder.encode("0lN0C9DeARAXcU4qCfXFEPZoapkuQGQF957J6OF9lcfwk0MjstHyiMtbFSjWjUOrz8fIManY1NMA%2BbZWTA8PGQ%3D%3D", "UTF-8")); /*공공데이터포털에서 받은 인증키*/
-//                                urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
-//                                urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*한 페이지 결과 수*/
-//                                urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("XML", "UTF-8")); /*요청자료형식(XML/JSON)*/
-//                                urlBuilder.append("&" + URLEncoder.encode("areaNo", "UTF-8") + "=" + URLEncoder.encode("2920051500", "UTF-8")); /*광주광역시 송정1동*/
-//                                urlBuilder.append("&" + URLEncoder.encode("time", "UTF-8") + "=" + URLEncoder.encode("2020070606", "UTF-8")); /*2020년 7월 6일 6시 발표*/
-//
-//                                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//                                StrictMode.setThreadPolicy(policy);
-//
-//                                URL url = new URL(urlBuilder.toString());
-//                                URLConnection t_connection = url.openConnection();
-//                                t_connection.setReadTimeout(8000);
-//                                InputStream is= t_connection.getInputStream(); //url위치로 입력스트림 연결 // 여기부터 문제 (링크 오류 아님, 불러오는 값의 형태가 잘못됐을 가능성이 높음)
-//
-//                                XmlPullParserFactory factory= XmlPullParserFactory.newInstance();//xml파싱을 위한
-//                                XmlPullParser xpp= factory.newPullParser();
-//                                xpp.setInput( new InputStreamReader(is, "UTF-8") ); //inputstream 으로부터 xml 입력받기
-//
-//                                String tag;
-//
-//                                xpp.next();
-//                                int eventType= xpp.getEventType();
-//                                while( eventType != XmlPullParser.END_DOCUMENT ){
-//                                    switch( eventType ){
-//                                        case XmlPullParser.START_DOCUMENT:
-//                                            break;
-//
-//                                        case XmlPullParser.START_TAG:
-//                                            tag= xpp.getName();//태그 이름 얻어오기
-//
-//                                            if(tag.equals("item")) ;// 첫번째 검색결과
-//                                            else if(tag.equals("today")){
-//                                                buffer.append("오늘자외선 : ");
-//                                                xpp.next();
-//                                                buffer.append(xpp.getText());//today 요소의 TEXT 읽어와서 문자열버퍼에 추가
-//                                                buffer.append("\n"); //줄바꿈 문자 추가
-//                                            }
-//                                            else if(tag.equals("tomorrow")){
-//                                                buffer.append("내일자외선 : ");
-//                                                xpp.next();
-//                                                buffer.append(xpp.getText());
-//                                                buffer.append("\n");
-//                                            }
-//                                            else if(tag.equals("theDayAfterTomorrow")){
-//                                                buffer.append("모레자외선 :");
-//                                                xpp.next();
-//                                                buffer.append(xpp.getText());
-//                                                buffer.append("\n");
-//                                            }
-//                                            break;
-//
-//                                        case XmlPullParser.TEXT:
-//                                            break;
-//
-//                                        case XmlPullParser.END_TAG:
-//                                            tag= xpp.getName(); //태그 이름 얻어오기
-//
-//                                            if(tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료..줄바꿈
-//
-//                                            break;
-//                                    }
-//
-//                                    eventType= xpp.next();
-//                                }
-//
-//                                testbtn.setText(buffer.toString());
-//
-//
-////                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-////                    conn.setConnectTimeout(15000);
-////                    conn.setReadTimeout(10000);
-////                    conn.setRequestMethod("POST");
-////                    conn.setDoOutput(true); // 쓰기모드 지정
-////                    conn.setDoInput(true); // 읽기모드 지정
-////                    conn.setUseCaches(false); // 캐싱데이터를 받을지 안받을지
-////                    conn.setDefaultUseCaches(false); // 캐싱데이터 디폴트 값 설정
-////                    conn.setRequestProperty("Accept-Charset", "utf-8");
-////                    conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-////                    BufferedReader rd;
-////                    if (conn.getResponseCode() == HTTP_OK) { // 원인
-////                        rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-////                    } else {
-////                        rd = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "UTF-8"));
-////                    }
-////                    StringBuilder sb = new StringBuilder();
-////                    String line;
-////                    while ((line = rd.readLine()) != null) {
-////                        sb.append(line);
-////                    }
-////                    rd.close();
-////                    conn.disconnect();
-////                    // System.out.println(sb.toString());
-////                    testbtn.setText(sb.toString());
-//                } catch (IOException | XmlPullParserException | OutOfMemoryError e ) {
-//                    testbtn.setText(e.toString());
-//                }
-//            }
-//        });
-//    }
-//
-//
-//
-//    public boolean onCreateOptionsMenu(Menu menu)
-//    {
-//        MenuInflater inflater = getMenuInflater();
-//
-//        inflater.inflate(R.menu.item, menu);
-//
-//        return true;
-//    }
-//
-//    public void dd(View v) {
-//        Toast.makeText(getApplicationContext(), "dd", Toast.LENGTH_SHORT).show();
-//    }
-//
-//
-//    @Override
-//    public boolean onOptionsItemSelected (MenuItem item)
-//    {
-//        Toast toast = Toast.makeText(getApplicationContext(),"", Toast.LENGTH_LONG);
-//
-//        switch(item.getItemId())
-//        {
-//            case R.id.menu1:
-//                toast.setText("Select Menu1");
-//                break;
-//            case R.id.menu2:
-//                toast.setText("Select Menu2");
-//                break;
-//        }
-//
-//        toast.show();
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-}
+        String location = "2920051500"; // 광주광역시 송정1동 값
 
+        SimpleDateFormat day = new SimpleDateFormat( "yyyyMMdd"); // 오늘날짜 불러오기
+        Date now = new Date();
+
+        String today = day.format(now) + "06"; // 오늘날짜 yyyyMMdd + HH(06)
+
+        try {
+            StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/LivingWthrIdxService/getUVIdx"); /*URL*/
+            // urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=서비스키"); /*Service Key*/
+            urlBuilder.append("?" + "serviceKey" + "=" + "0lN0C9DeARAXcU4qCfXFEPZoapkuQGQF957J6OF9lcfwk0MjstHyiMtbFSjWjUOrz8fIManY1NMA%2BbZWTA8PGQ%3D%3D"); /*공공데이터포털에서 받은 인증키*/
+            urlBuilder.append("&" + "pageNo" + "=" + "1"); /*페이지번호*/
+            urlBuilder.append("&" + "numOfRows" + "=" + "1"); /*한 페이지 결과 수*/
+            urlBuilder.append("&" + "dataType" + "=" + "XML"); /*요청자료형식(XML/JSON)*/
+            urlBuilder.append("&" + "areaNo" + "=" + location);
+            urlBuilder.append("&" + "time" + "=" + today);
+            urlBuilder.append("&");
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            URL url = new URL(urlBuilder.toString());
+            URLConnection t_connection = url.openConnection();
+            t_connection.setReadTimeout(8000);
+            InputStream is= t_connection.getInputStream(); //url위치로 입력스트림 연결 // 여기부터 문제 (링크 오류 아님, 불러오는 값의 형태가 잘못됐을 가능성이 높음)
+
+            XmlPullParserFactory factory= XmlPullParserFactory.newInstance();//xml파싱을 위한
+            XmlPullParser xpp= factory.newPullParser();
+            xpp.setInput( new InputStreamReader(is, "UTF-8") ); //inputstream 으로부터 xml 입력받기
+            StringBuffer buffer = new StringBuffer();
+
+            String tag;
+
+            xpp.next();
+            int eventType= xpp.getEventType();
+            while( eventType != XmlPullParser.END_DOCUMENT ){
+                switch( eventType ){
+                    case XmlPullParser.START_DOCUMENT:
+                        buffer.append("파싱 시작\n");
+                        break;
+
+                    case XmlPullParser.START_TAG:
+                        tag= xpp.getName();//태그 이름 얻어오기
+
+                        if(tag.equals("item")) ; // 첫번째 검색결과
+                        else if(tag.equals("today")){
+                            buffer.append("오늘자외선 : ");
+                            xpp.next();
+                            buffer.append(xpp.getText());//today 요소의 TEXT 읽어와서 문자열버퍼에 추가
+                            buffer.append("\n"); //줄바꿈 문자 추가
+                        }
+                        else if(tag.equals("tomorrow")){
+                            buffer.append("내일자외선 : ");
+                            xpp.next();
+                            buffer.append(xpp.getText());
+                            buffer.append("\n");
+                        }
+                        else if(tag.equals("theDayAfterTomorrow")){
+                            buffer.append("모레자외선 :");
+                            xpp.next();
+                            buffer.append(xpp.getText());
+                            buffer.append("\n");
+                        }
+                        break;
+
+                    case XmlPullParser.TEXT:
+                        break;
+
+                    case XmlPullParser.END_TAG:
+                        tag= xpp.getName(); //태그 이름 얻어오기
+
+                        if(tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료..줄바꿈
+
+                        break;
+                }
+
+                eventType= xpp.next();
+            }
+
+
+
+        } catch (IOException | XmlPullParserException | OutOfMemoryError e ) {
+
+        }
+
+        new AlarmHATT(getApplicationContext()).Alarm();
+
+    }
+
+    public class AlarmHATT {
+        private Context context;
+        public AlarmHATT(Context context) {
+            this.context=context;
+        }
+        public void Alarm() {
+            AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(MainActivity.this, BroadcastD.class);
+
+            PendingIntent sender = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+            Calendar calendar = Calendar.getInstance();
+            //알람시간 calendar에 set해주기
+
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE) + 1, calendar.get(Calendar.SECOND));
+
+            //알람 예약
+            am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+        }
+    }
 }
 
