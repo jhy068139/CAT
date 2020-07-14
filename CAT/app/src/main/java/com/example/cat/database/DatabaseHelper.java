@@ -43,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertNote(String tag, String note) {
+    public long insertNote(String tag, String note,String SettingTime) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // no need to add them
         values.put(Note.COLUMN_TAG, tag);
         values.put(Note.COLUMN_NOTE, note);
-        values.put(Note.COLUMN_SETTINGTIME, "2020.01.01.22.10");
+        values.put(Note.COLUMN_SETTINGTIME, SettingTime);
         // insert row
         long id = db.insert(Note.TABLE_NAME, null, values);
 

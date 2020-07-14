@@ -31,10 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     CalendarView calMenu;
-
-    TextView sel,tag,selname;
-
-
     ImageView itemMenu;
     ListView listView;
 
@@ -46,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
     ListAdapter listAdapter;
 
-    private void createNote(String tag,String note) {
+    private void createNote(String tag,String note,String SettingTime) {
         // inserting note in db and getting
         // newly inserted note id
-        long id = db.insertNote(tag, note);
+        long id = db.insertNote(tag, note,SettingTime);
 
         // get the newly inserted note from db
         Note n = db.getNote(id);
@@ -143,15 +139,15 @@ public class MainActivity extends AppCompatActivity {
 
         calMenu = (CalendarView) findViewById(R.id.calMenu);
 
-        sel= findViewById(R.id.sel);
+
 
 
         calMenu.setOnDateChangeListener(new CalendarView.OnDateChangeListener() // 날짜 선택 이벤트
         {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String date = year + "/" + (month + 1) + "/" + dayOfMonth;
-                sel.setText(date); // 선택한 날짜로 설정
+                final String date = year + "/" + (month + 1) + "/" + dayOfMonth;
+
                 AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
 
@@ -173,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                         String selItem = (String) sp.getSelectedItem();
                         String value = mesgase.getText().toString();
 
-                        createNote(selItem,value);
+                        createNote(selItem,value,date);
                         dialog.dismiss();
 
                         //닫기
