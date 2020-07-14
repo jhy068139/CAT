@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
                         if (item.getTitle().toString().equals("설정") ){
                             Intent intent = new Intent(getApplicationContext(),MenuActivity.class);
                             startActivity(intent);
-
                         }
                         Toast.makeText(getApplicationContext(),
                                 "팝업메뉴 이벤트 처리 - "
