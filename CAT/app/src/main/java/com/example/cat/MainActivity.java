@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.MenuItem;
@@ -27,7 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.cat.database.BroadcastD;
+import com.example.cat.BroadcastD;
 import com.example.cat.database.DatabaseHelper;
 import com.example.cat.database.model.Note;
 
@@ -57,7 +58,136 @@ public class MainActivity extends AppCompatActivity {
     StringBuffer buffer = new StringBuffer();
 
     public StringBuffer getBuffer() {
-        return this.buffer;
+        String location = "2920051500"; // 광주광역시 송정1동 값
+
+        SimpleDateFormat day = new SimpleDateFormat( "yyyyMMdd"); // 오늘날짜 불러오기
+        Date now = new Date();
+
+        String today = day.format(now) + "06"; // 오늘날짜 yyyyMMdd + HH(06)
+
+        try {
+            StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/LivingWthrIdxService/getUVIdx"); /*URL*/
+            // urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=서비스키"); /*Service Key*/
+            urlBuilder.append("?" + "serviceKey" + "=" + "0lN0C9DeARAXcU4qCfXFEPZoapkuQGQF957J6OF9lcfwk0MjstHyiMtbFSjWjUOrz8fIManY1NMA%2BbZWTA8PGQ%3D%3D"); /*공공데이터포털에서 받은 인증키*/
+            urlBuilder.append("&" + "pageNo" + "=" + "1"); /*페이지번호*/
+            urlBuilder.append("&" + "numOfRows" + "=" + "1"); /*한 페이지 결과 수*/
+            urlBuilder.append("&" + "dataType" + "=" + "XML"); /*요청자료형식(XML/JSON)*/
+            urlBuilder.append("&" + "areaNo" + "=" + location);
+            urlBuilder.append("&" + "time" + "=" + today);
+            urlBuilder.append("&");
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            URL url = new URL(urlBuilder.toString());
+            URLConnection t_connection = url.openConnection();
+            t_connection.setReadTimeout(8000);
+            InputStream is= t_connection.getInputStream(); //url위치로 입력스트림 연결 // 여기부터 문제 (링크 오류 아님, 불러오는 값의 형태가 잘못됐을 가능성이 높음)
+
+            XmlPullParserFactory factory= XmlPullParserFactory.newInstance();//xml파싱을 위한
+            XmlPullParser xpp= factory.newPullParser();
+            xpp.setInput( new InputStreamReader(is, "UTF-8") ); //inputstream 으로부터 xml 입력받기
+            buffer = new StringBuffer();
+
+            String tag;
+
+            xpp.next();
+            int eventType= xpp.getEventType();
+            while( eventType != XmlPullParser.END_DOCUMENT ){
+                switch( eventType ){
+                    case XmlPullParser.START_DOCUMENT:
+                        buffer.append("파싱 시작\n");
+                        break;
+
+                    case XmlPullParser.START_TAG:
+                        tag= xpp.getName();//태그 이름 얻어오기
+
+                        if(tag.equals("item")) ; // 첫번째 검색결과
+                        else if(tag.equals("today")){
+                            // buffer.append("오늘자외선 : ");
+                            xpp.next();
+                            buffer.append(xpp.getText());//today 요소의 TEXT 읽어와서 문자열버퍼에 추가
+                            if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
+                                buffer.append("(낮음)");
+                            }
+                            else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
+                                buffer.append("(보통)");
+                            }
+                            else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
+                                buffer.append("(높음)");
+                            }
+                            else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
+                                buffer.append("(매우 높음)");
+                            }
+                            else { // 11~
+                                buffer.append("(위험)");
+                            }
+                            buffer.append(" "); // 띄어쓰기
+                        }
+                        else if(tag.equals("tomorrow")){
+                            // buffer.append("내일자외선 : ");
+                            xpp.next();
+                            buffer.append(xpp.getText());
+                            if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
+                                buffer.append("(낮음)");
+                            }
+                            else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
+                                buffer.append("(보통)");
+                            }
+                            else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
+                                buffer.append("(높음)");
+                            }
+                            else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
+                                buffer.append("(매우 높음)");
+                            }
+                            else { // 11~
+                                buffer.append("(위험)");
+                            }
+                            buffer.append(" "); // 띄어쓰기
+                        }
+                        else if(tag.equals("theDayAfterTomorrow")){
+                            // buffer.append("모레자외선 :");
+                            xpp.next();
+                            buffer.append(xpp.getText());
+                            if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
+                                buffer.append("(낮음)");
+                            }
+                            else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
+                                buffer.append("(보통)");
+                            }
+                            else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
+                                buffer.append("(높음)");
+                            }
+                            else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
+                                buffer.append("(매우 높음)");
+                            }
+                            else { // 11~
+                                buffer.append("(위험)");
+                            }
+                            buffer.append(" "); // 띄어쓰기
+                        }
+                        break;
+
+                    case XmlPullParser.TEXT:
+                        break;
+
+                    case XmlPullParser.END_TAG:
+                        tag= xpp.getName(); //태그 이름 얻어오기
+
+                        if(tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료..줄바꿈
+
+                        break;
+                }
+
+                eventType= xpp.next();
+            }
+
+
+
+        } catch (IOException | XmlPullParserException | OutOfMemoryError e ) {
+
+        }
+
+        return buffer;
     }
 
 
@@ -229,89 +359,7 @@ public class MainActivity extends AppCompatActivity {
     }
     });
 
-        String location = "2920051500"; // 광주광역시 송정1동 값
 
-        SimpleDateFormat day = new SimpleDateFormat( "yyyyMMdd"); // 오늘날짜 불러오기
-        Date now = new Date();
-
-        String today = day.format(now) + "06"; // 오늘날짜 yyyyMMdd + HH(06)
-
-        try {
-            StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/LivingWthrIdxService/getUVIdx"); /*URL*/
-            // urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=서비스키"); /*Service Key*/
-            urlBuilder.append("?" + "serviceKey" + "=" + "0lN0C9DeARAXcU4qCfXFEPZoapkuQGQF957J6OF9lcfwk0MjstHyiMtbFSjWjUOrz8fIManY1NMA%2BbZWTA8PGQ%3D%3D"); /*공공데이터포털에서 받은 인증키*/
-            urlBuilder.append("&" + "pageNo" + "=" + "1"); /*페이지번호*/
-            urlBuilder.append("&" + "numOfRows" + "=" + "1"); /*한 페이지 결과 수*/
-            urlBuilder.append("&" + "dataType" + "=" + "XML"); /*요청자료형식(XML/JSON)*/
-            urlBuilder.append("&" + "areaNo" + "=" + location);
-            urlBuilder.append("&" + "time" + "=" + today);
-            urlBuilder.append("&");
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-            URL url = new URL(urlBuilder.toString());
-            URLConnection t_connection = url.openConnection();
-            t_connection.setReadTimeout(8000);
-            InputStream is= t_connection.getInputStream(); //url위치로 입력스트림 연결 // 여기부터 문제 (링크 오류 아님, 불러오는 값의 형태가 잘못됐을 가능성이 높음)
-
-            XmlPullParserFactory factory= XmlPullParserFactory.newInstance();//xml파싱을 위한
-            XmlPullParser xpp= factory.newPullParser();
-            xpp.setInput( new InputStreamReader(is, "UTF-8") ); //inputstream 으로부터 xml 입력받기
-            StringBuffer buffer = new StringBuffer();
-
-            String tag;
-
-            xpp.next();
-            int eventType= xpp.getEventType();
-            while( eventType != XmlPullParser.END_DOCUMENT ){
-                switch( eventType ){
-                    case XmlPullParser.START_DOCUMENT:
-                        buffer.append("파싱 시작\n");
-                        break;
-
-                    case XmlPullParser.START_TAG:
-                        tag= xpp.getName();//태그 이름 얻어오기
-
-                        if(tag.equals("item")) ; // 첫번째 검색결과
-                        else if(tag.equals("today")){
-                            buffer.append("오늘자외선 : ");
-                            xpp.next();
-                            buffer.append(xpp.getText());//today 요소의 TEXT 읽어와서 문자열버퍼에 추가
-                            buffer.append("\n"); //줄바꿈 문자 추가
-                        }
-                        else if(tag.equals("tomorrow")){
-                            buffer.append("내일자외선 : ");
-                            xpp.next();
-                            buffer.append(xpp.getText());
-                            buffer.append("\n");
-                        }
-                        else if(tag.equals("theDayAfterTomorrow")){
-                            buffer.append("모레자외선 :");
-                            xpp.next();
-                            buffer.append(xpp.getText());
-                            buffer.append("\n");
-                        }
-                        break;
-
-                    case XmlPullParser.TEXT:
-                        break;
-
-                    case XmlPullParser.END_TAG:
-                        tag= xpp.getName(); //태그 이름 얻어오기
-
-                        if(tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료..줄바꿈
-
-                        break;
-                }
-
-                eventType= xpp.next();
-            }
-
-
-
-        } catch (IOException | XmlPullParserException | OutOfMemoryError e ) {
-
-        }
 
         new AlarmHATT(getApplicationContext()).Alarm();
 
@@ -331,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
             //알람시간 calendar에 set해주기
 
-            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE) + 1, calendar.get(Calendar.SECOND));
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND) + 10);
 
             //알람 예약
             am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
