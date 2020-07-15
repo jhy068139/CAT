@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public StringBuffer getBuffer() {
         String location = "2920051500"; // 광주광역시 송정1동 값
 
-        SimpleDateFormat day = new SimpleDateFormat( "yyyyMMdd"); // 오늘날짜 불러오기
+        SimpleDateFormat day = new SimpleDateFormat("yyyyMMdd"); // 오늘날짜 불러오기
         Date now = new Date();
 
         String todayUV = day.format(now) + "06"; // 오늘날짜 yyyyMMdd + HH(06)
@@ -82,95 +82,81 @@ public class MainActivity extends AppCompatActivity {
             URL url = new URL(urlBuilder.toString());
             URLConnection t_connection = url.openConnection();
             t_connection.setReadTimeout(8000);
-            InputStream is= t_connection.getInputStream(); //url위치로 입력스트림 연결 // 여기부터 문제 (링크 오류 아님, 불러오는 값의 형태가 잘못됐을 가능성이 높음)
+            InputStream is = t_connection.getInputStream(); //url위치로 입력스트림 연결 // 여기부터 문제 (링크 오류 아님, 불러오는 값의 형태가 잘못됐을 가능성이 높음)
 
-            XmlPullParserFactory factory= XmlPullParserFactory.newInstance();//xml파싱을 위한
-            XmlPullParser xpp= factory.newPullParser();
-            xpp.setInput( new InputStreamReader(is, "UTF-8") ); //inputstream 으로부터 xml 입력받기
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();//xml파싱을 위한
+            XmlPullParser xpp = factory.newPullParser();
+            xpp.setInput(new InputStreamReader(is, "UTF-8")); //inputstream 으로부터 xml 입력받기
             buffer = new StringBuffer();
 
             String tag;
 
             xpp.next();
-            int eventType= xpp.getEventType();
-            while( eventType != XmlPullParser.END_DOCUMENT ){
-                switch( eventType ){
+            int eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
                         buffer.append("파싱 시작\n");
                         break;
 
                     case XmlPullParser.START_TAG:
-                        tag= xpp.getName();//태그 이름 얻어오기
+                        tag = xpp.getName();//태그 이름 얻어오기
 
-                        if(tag.equals("item")) ; // 첫번째 검색결과
-                        else if(tag.equals("today")){
+                        if (tag.equals("item")) ; // 첫번째 검색결과
+                        else if (tag.equals("today")) {
                             // buffer.append("오늘자외선 : ");
                             xpp.next();
                             buffer.append(xpp.getText());//today 요소의 TEXT 읽어와서 문자열버퍼에 추가
                             if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
                                 buffer.append("(낮음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
+                            } else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
                                 buffer.append("(보통)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
+                            } else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
                                 buffer.append("(높음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
+                            } else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
                                 buffer.append("(매우 높음)");
                                 // today.setTextColor(Color.parseColor("#F39800")); //색상코드 이용
-                            }
-                            else { // 11~
+                            } else { // 11~
                                 buffer.append("(위험)");
                                 // today.setTextColor(Color.parseColor("#FF0000")); //색상코드 이용
                             }
                             buffer.append(" "); // 띄어쓰기
-                        }
-                        else if(tag.equals("tomorrow")){
+                        } else if (tag.equals("tomorrow")) {
                             // buffer.append("내일자외선 : ");
-                            xpp.next();
-                            buffer.append(xpp.getText());
-                            if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
-                                buffer.append("(낮음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
-                                buffer.append("(보통)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
-                                buffer.append("(높음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
-                                buffer.append("(매우 높음)");
-                                // tomorrow.setTextColor(Color.parseColor("#F39800")); //색상코드 이용
-                            }
-                            else { // 11~
-                                buffer.append("(위험)");
-                                // tomorrow.setTextColor(Color.parseColor("#FF0000")); //색상코드 이용
-                            }
-                            buffer.append(" "); // 띄어쓰기
-                        }
-                        else if(tag.equals("theDayAfterTomorrow")){
+//                            xpp.next();
+//                            buffer.append(xpp.getText());
+//                            if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
+//                                buffer.append("(낮음)");
+//                            } else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
+//                                buffer.append("(보통)");
+//                            } else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
+//                                buffer.append("(높음)");
+//                            } else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
+//                                buffer.append("(매우 높음)");
+//                                // tomorrow.setTextColor(Color.parseColor("#F39800")); //색상코드 이용
+//                            } else { // 11~
+//                                buffer.append("(위험)");
+//                                // tomorrow.setTextColor(Color.parseColor("#FF0000")); //색상코드 이용
+//                            }
+//                            buffer.append(" "); // 띄어쓰기
+                        } else if (tag.equals("theDayAfterTomorrow")) {
                             // buffer.append("모레자외선 :");
-                            xpp.next();
-                            buffer.append(xpp.getText());
-                            if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
-                                buffer.append("(낮음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
-                                buffer.append("(보통)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
-                                buffer.append("(높음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
-                                buffer.append("(매우 높음)");
-                                // morea.setTextColor(Color.parseColor("#F39800")); //색상코드 이용
-                            }
-                            else { // 11~
-                                buffer.append("(위험)");
-                                // morea.setTextColor(Color.parseColor("#FF0000")); //색상코드 이용
-                            }
-                            buffer.append(" "); // 띄어쓰기
+//                            xpp.next();
+//                            buffer.append(xpp.getText());
+//                            if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
+//                                buffer.append("(낮음)");
+//                            } else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
+//                                buffer.append("(보통)");
+//                            } else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
+//                                buffer.append("(높음)");
+//                            } else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
+//                                buffer.append("(매우 높음)");
+//                                // morea.setTextColor(Color.parseColor("#F39800")); //색상코드 이용
+//                            } else { // 11~
+//                                buffer.append("(위험)");
+//                                // morea.setTextColor(Color.parseColor("#FF0000")); //색상코드 이용
+//                            }
+//                            buffer.append(" "); // 띄어쓰기
                         }
                         break;
 
@@ -178,19 +164,18 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case XmlPullParser.END_TAG:
-                        tag= xpp.getName(); //태그 이름 얻어오기
+                        tag = xpp.getName(); //태그 이름 얻어오기
 
-                        if(tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료..줄바꿈
+                        if (tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료..줄바꿈
 
                         break;
                 }
 
-                eventType= xpp.next();
+                eventType = xpp.next();
             }
 
 
-
-        } catch (IOException | XmlPullParserException | OutOfMemoryError e ) {
+        } catch (IOException | XmlPullParserException | OutOfMemoryError e) {
 
         }
 
@@ -274,105 +259,103 @@ public class MainActivity extends AppCompatActivity {
         });
 
         itemMenu.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-                                            // 이벤트 처리
+                // 이벤트 처리
 
-                                            AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
-                                            View mView = getLayoutInflater().inflate(R.layout.setting_dialog, null);
-                                            // 스피너 설정
-                                            final Switch selSw = mView.findViewById(R.id.selSw);
+                AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.setting_dialog, null);
+                // 스피너 설정
+                final Switch selSw = mView.findViewById(R.id.selSw);
 
-                                            // editText 설정
+                // editText 설정
 
-                                            aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // Text 값 받아서 로그 남기기
+                aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Text 값 받아서 로그 남기기
 
 
-                                                    //닫기
-                                                    dialog.dismiss();
-                                                }
-                                            });
+                        //닫기
+                        dialog.dismiss();
+                    }
+                });
 
 
 // 취소 버튼 설정
-                                            aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();     //닫기
-                                                }
-                                            });
-                                            //다이얼로그 호출
-                                            aBuilder.setView(mView);
-                                            AlertDialog dialog = aBuilder.create();
-                                            dialog.show();
-                                        }
-                                    });
+                aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();     //닫기
+                    }
+                });
+                //다이얼로그 호출
+                aBuilder.setView(mView);
+                AlertDialog dialog = aBuilder.create();
+                dialog.show();
+            }
+        });
 
 
-
-    calMenu =(CalendarView)findViewById(R.id.calMenu);
-
-
+        calMenu = (CalendarView) findViewById(R.id.calMenu);
 
 
         calMenu.setOnDateChangeListener(new CalendarView.OnDateChangeListener() // 날짜 선택 이벤트
 
-    {
-        @Override
-        public void onSelectedDayChange (@NonNull CalendarView view,int year, int month,
-        int dayOfMonth){
-        final String date = year + "/" + (month + 1) + "/" + dayOfMonth;
-
-        AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
-        View mView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
-
-
-        // 스피너 설정
-        final Spinner sp = (Spinner) mView.findViewById(R.id.sp);
-        final TimePicker tp = mView.findViewById(R.id.tp);
-        // 스피너 어댑터 설정
-        ArrayAdapter yearAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.location, android.R.layout.simple_spinner_item);
-        sp.setAdapter(yearAdapter);
-
-        // editText 설정
-        final EditText mesgase = mView.findViewById(R.id.mesgase);
-        // 확인 버튼 설정
-        aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Text 값 받아서 로그 남기기
-                String selItem = (String) sp.getSelectedItem();
-                String value = mesgase.getText().toString();
+            public void onSelectedDayChange(@NonNull CalendarView view, final int year, final int month, final int dayOfMonth) {
+                final String date = year + "/" + (month + 1) + "/" + dayOfMonth;
 
-                createNote(selItem, value, date);
-                dialog.dismiss();
+                AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
 
-                //닫기
-            }
-        });
+                // 스피너 설정
+                final Spinner sp = (Spinner) mView.findViewById(R.id.sp);
+                final TimePicker tp = mView.findViewById(R.id.tp);
+                // 스피너 어댑터 설정
+                ArrayAdapter yearAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.location, android.R.layout.simple_spinner_item);
+                sp.setAdapter(yearAdapter);
+
+                // editText 설정
+                final EditText mesgase = mView.findViewById(R.id.mesgase);
+                // 확인 버튼 설정
+                aBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Text 값 받아서 로그 남기기
+                        String selItem = (String) sp.getSelectedItem();
+                        String value = mesgase.getText().toString();
+
+                        createNote(selItem, value, date);
+
+                        new AlarmHATT(getApplicationContext()).Alarm(year, month, dayOfMonth, tp.getCurrentHour(), tp.getCurrentMinute());
+
+                        dialog.dismiss();
+
+                        //닫기
+                    }
+                });
 
 
 // 취소 버튼 설정
-        aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();     //닫기
+                aBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();     //닫기
+                    }
+                });
+                //다이얼로그 호출
+                aBuilder.setView(mView);
+                AlertDialog dialog = aBuilder.create();
+                dialog.show();
             }
         });
-        //다이얼로그 호출
-        aBuilder.setView(mView);
-        AlertDialog dialog = aBuilder.create();
-        dialog.show();
-    }
-    });
 
         String location = "2920051500"; // 광주광역시 송정1동 값
 
-        SimpleDateFormat day = new SimpleDateFormat( "yyyyMMdd"); // 오늘날짜 불러오기
+        SimpleDateFormat day = new SimpleDateFormat("yyyyMMdd"); // 오늘날짜 불러오기
         Date now = new Date();
 
         String todayUV = day.format(now) + "06"; // 오늘날짜 yyyyMMdd + HH(06)
@@ -393,91 +376,77 @@ public class MainActivity extends AppCompatActivity {
             URL url = new URL(urlBuilder.toString());
             URLConnection t_connection = url.openConnection();
             t_connection.setReadTimeout(8000);
-            InputStream is= t_connection.getInputStream(); //url위치로 입력스트림 연결 // 여기부터 문제 (링크 오류 아님, 불러오는 값의 형태가 잘못됐을 가능성이 높음)
+            InputStream is = t_connection.getInputStream(); //url위치로 입력스트림 연결 // 여기부터 문제 (링크 오류 아님, 불러오는 값의 형태가 잘못됐을 가능성이 높음)
 
-            XmlPullParserFactory factory= XmlPullParserFactory.newInstance();//xml파싱을 위한
-            XmlPullParser xpp= factory.newPullParser();
-            xpp.setInput( new InputStreamReader(is, "UTF-8") ); //inputstream 으로부터 xml 입력받기
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();//xml파싱을 위한
+            XmlPullParser xpp = factory.newPullParser();
+            xpp.setInput(new InputStreamReader(is, "UTF-8")); //inputstream 으로부터 xml 입력받기
             buffer = new StringBuffer();
 
             String tag;
 
             xpp.next();
-            int eventType= xpp.getEventType();
-            while( eventType != XmlPullParser.END_DOCUMENT ){
-                switch( eventType ){
+            int eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
                         buffer.append("파싱 시작\n");
                         break;
 
                     case XmlPullParser.START_TAG:
-                        tag= xpp.getName();//태그 이름 얻어오기
+                        tag = xpp.getName();//태그 이름 얻어오기
 
-                        if(tag.equals("item")) ; // 첫번째 검색결과
-                        else if(tag.equals("today")){
+                        if (tag.equals("item")) ; // 첫번째 검색결과
+                        else if (tag.equals("today")) {
                             // buffer.append("오늘자외선 : ");
                             xpp.next();
                             buffer.append(xpp.getText());//today 요소의 TEXT 읽어와서 문자열버퍼에 추가
                             if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
                                 buffer.append("(낮음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
+                            } else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
                                 buffer.append("(보통)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
+                            } else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
                                 buffer.append("(높음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
+                            } else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
                                 buffer.append("(매우 높음)");
                                 today.setTextColor(Color.parseColor("#F39800")); //색상코드 이용
-                            }
-                            else { // 11~
+                            } else { // 11~
                                 buffer.append("(위험)");
                                 today.setTextColor(Color.parseColor("#FF0000")); //색상코드 이용
                             }
                             buffer.append(" "); // 띄어쓰기
-                        }
-                        else if(tag.equals("tomorrow")){
+                        } else if (tag.equals("tomorrow")) {
                             // buffer.append("내일자외선 : ");
                             xpp.next();
                             buffer.append(xpp.getText());
                             if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
                                 buffer.append("(낮음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
+                            } else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
                                 buffer.append("(보통)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
+                            } else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
                                 buffer.append("(높음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
+                            } else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
                                 buffer.append("(매우 높음)");
                                 tomorrow.setTextColor(Color.parseColor("#F39800")); //색상코드 이용
-                            }
-                            else { // 11~
+                            } else { // 11~
                                 buffer.append("(위험)");
                                 tomorrow.setTextColor(Color.parseColor("#FF0000")); //색상코드 이용
                             }
                             buffer.append(" "); // 띄어쓰기
-                        }
-                        else if(tag.equals("theDayAfterTomorrow")){
+                        } else if (tag.equals("theDayAfterTomorrow")) {
                             // buffer.append("모레자외선 :");
                             xpp.next();
                             buffer.append(xpp.getText());
                             if (Integer.parseInt(xpp.getText()) <= 2) { // 1~2
                                 buffer.append("(낮음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
+                            } else if (Integer.parseInt(xpp.getText()) <= 5) { // 3~5
                                 buffer.append("(보통)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
+                            } else if (Integer.parseInt(xpp.getText()) <= 7) { // 6~7
                                 buffer.append("(높음)");
-                            }
-                            else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
+                            } else if (Integer.parseInt(xpp.getText()) <= 10) { // 8~10
                                 buffer.append("(매우 높음)");
                                 morea.setTextColor(Color.parseColor("#F39800")); //색상코드 이용
-                            }
-                            else { // 11~
+                            } else { // 11~
                                 buffer.append("(위험)");
                                 morea.setTextColor(Color.parseColor("#FF0000")); //색상코드 이용
                             }
@@ -489,33 +458,57 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case XmlPullParser.END_TAG:
-                        tag= xpp.getName(); //태그 이름 얻어오기
+                        tag = xpp.getName(); //태그 이름 얻어오기
 
-                        if(tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료..줄바꿈
+                        if (tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료..줄바꿈
 
                         break;
                 }
 
-                eventType= xpp.next();
+                eventType = xpp.next();
             }
 
 
-
-        } catch (IOException | XmlPullParserException | OutOfMemoryError e ) {
+        } catch (IOException | XmlPullParserException | OutOfMemoryError e) {
 
         }
 
-        new AlarmHATT(getApplicationContext()).Alarm(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, Calendar.HOUR, Calendar.MINUTE + 1);
+        new AlarmHATT1(getApplicationContext()).Alarm(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, 10, 30);
 
     }
 
     public class AlarmHATT {
         private Context context;
+
         public AlarmHATT(Context context) {
-            this.context=context;
+            this.context = context;
         }
+
         public void Alarm(int year, int month, int date, int hour, int minute) {
-            AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(MainActivity.this, BroadcastD.class);
+
+            PendingIntent sender = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+            Calendar calendar = Calendar.getInstance();
+            //알람시간 calendar에 set해주기
+
+            calendar.set(year, month, date, hour, minute, 0);
+
+            //알람 예약
+            am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+        }
+    }
+
+    public class AlarmHATT1 {
+        private Context context;
+
+        public AlarmHATT1(Context context) {
+            this.context = context;
+        }
+
+        public void Alarm(int year, int month, int date, int hour, int minute) {
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent(MainActivity.this, BroadcastD.class);
 
             PendingIntent sender = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);

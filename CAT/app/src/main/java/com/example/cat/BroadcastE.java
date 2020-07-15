@@ -1,24 +1,18 @@
 package com.example.cat;
-        import android.app.Notification;
-        import android.app.NotificationChannel;
-        import android.app.NotificationManager;
-        import android.app.PendingIntent;
-        import android.content.BroadcastReceiver;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.res.Resources;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.graphics.Color;
-        import android.os.Build;
 
-        import androidx.core.app.NotificationCompat;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 
-        import com.example.cat.MainActivity;
-        import com.example.cat.R;
+import androidx.core.app.NotificationCompat;
 
-
-public class BroadcastD extends BroadcastReceiver {
+public class BroadcastE extends BroadcastReceiver {
     String INTENT_ACTION = Intent.ACTION_BOOT_COMPLETED;
 
     @Override
@@ -48,7 +42,7 @@ public class BroadcastD extends BroadcastReceiver {
                             .setTicker("HETT")
                             .setWhen(System.currentTimeMillis())
                             .setContentTitle("CAT")
-                            .setContentText("시간이 되었습니다!")
+                            .setContentText("오늘 자외선은 " + ma.getBuffer() + "입니다.")
                             .setDefaults(Notification.DEFAULT_SOUND) // 알림 시 소리
 //                            .setLargeIcon(largeIconForNoti)
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
