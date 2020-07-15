@@ -36,8 +36,8 @@ public class BroadcastD extends BroadcastReceiver {
             notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             notificationManager.createNotificationChannel(notificationChannel);
 
-//            Bitmap largeIconForNoti =
-//                    BitmapFactory.decodeResource(getResources(), R.drawable.logo3);
+            Bitmap largeIconForNoti =
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.logo3);
             PendingIntent mPendingIntent = PendingIntent.getActivity(context, 0,
                     new Intent(context, MainActivity.class),
                     PendingIntent.FLAG_UPDATE_CURRENT);
@@ -50,7 +50,7 @@ public class BroadcastD extends BroadcastReceiver {
                             .setContentTitle("CAT")
                             .setContentText("시간이 되었습니다!")
                             .setDefaults(Notification.DEFAULT_SOUND) // 알림 시 소리
-//                            .setLargeIcon(largeIconForNoti)
+                            .setLargeIcon(largeIconForNoti)
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                             .setAutoCancel(true) // true 사용자가 알림 터치 시 자동으로 사라짐, false 반대
                             .setContentIntent(mPendingIntent);
